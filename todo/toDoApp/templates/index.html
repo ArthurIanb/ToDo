@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method='POST' action={% url 'new_task' %}>
+        {% csrf_token %}
+        <label for='name'>Имя: </label>
+        <input name='name'/>
+        <label for='description'>Описание: </label>
+        <textarea name='description'></textarea>
+        <input type='submit' value='Создать!'/>
+    </form>
+    {% for obj in tasks %}
+        <h1>{{obj.name}}</h1>
+        <p>{{obj.description}}</p>
+        {% if obj.is_done %}
+            <form action={% url 'switch' obj.id %} method='POST'>
+                {% csrf_token %}
+                <input type='submit' value='Open'/>
+            </form>
+            {% else %}
+            <form action={% url 'switch' obj.id %} method='POST'>
+                {% csrf_token %}
+                <input type='submit' value='Finish'/>
+            </form>
+            
+        {% endif %}
+        <form action={% url 'rem_task' obj.id %} method='POST'>
+            {% csrf_token %}
+            <input type='submit' value='Remove'/>
+        </form>
+    {% endfor %}
+{% endblock %}
